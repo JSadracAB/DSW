@@ -24,9 +24,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('community', [CommunityLinkController::class, 'index']);
+Route::get('community', [CommunityLinkController::class, 'index'])->middleware('auth');  
 
-Route::post('community', [CommunityLinkController::class, 'store']);
+Route::post('community', [CommunityLinkController::class, 'store'])->middleware('auth'); 
 
 /*
 |--------------------------------------------------------------------------
