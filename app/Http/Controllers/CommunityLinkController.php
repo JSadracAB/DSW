@@ -36,16 +36,7 @@ class CommunityLinkController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
-        /*
-        $request->path();
-        $request->url();
-        $request->input()
-        $request->fullUrl();
-        */
-        request()->merge(['user_id' => Auth::id(), 'channel_id' => 1]);
-        CommunityLink::create($request->all());
-        return back();
+        //
     }
 
     /**
