@@ -19,10 +19,8 @@
             @endforeach
 
         </div>
+        @include('community.partials.add-link')
     </div>
     {{$links->links()}}
-
-    @include('/partials/add-link.blade.php');
 </div>
-
 @stop
