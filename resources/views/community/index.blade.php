@@ -19,7 +19,7 @@
             @endforeach
 
         </div>
-        @include('community.partials.add-link');
+        @include('community.partials.add-link')
     </div>
     {{$links->links()}}
 
