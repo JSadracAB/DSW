@@ -40,9 +40,16 @@ class CommunityLinkController extends Controller
         //dd($request);
 
         // $request->path();
+        // Muestra unicamente la ruta
+
         // $request->url();
+        // Muestra la url sin contar las variables
+
         // $request->input();
+        // Muestra los campos input
+
         // $request->fullUrl();
+        // Muestra la url completa (variables incluidas)
 
         $this->validate($request, [
             'title' => 'required',
