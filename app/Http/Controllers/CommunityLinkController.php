@@ -55,10 +55,11 @@ class CommunityLinkController extends Controller
 
         $this->validate($request, [
             'title' => 'required',
-            'link' => 'required|active_url|unique:community_links'
+            'link' => 'required|active_url|unique:community_links',
+            'channel_id' => 'required|exists:channels,id'
         ]);
 
-        request()->merge(['user_id' => Auth::id(), 'channel_id' => 1]);
+        request()->merge(['user_id' => Auth::id()]);
         CommunityLink::create($request->all());
 
         // return response('Respuesta', 200);
