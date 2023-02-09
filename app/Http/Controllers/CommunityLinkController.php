@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CommunityLink;
 use App\Models\Channel;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,8 +17,8 @@ class CommunityLinkController extends Controller
      */
     public function index()
     {
-        $links = CommunityLink::paginate(25);
-        $channels = Channel::orderBy('title','asc')->get();
+        $links = CommunityLink::where('approved', 1)->paginate(25);
+        $channels = Channel::orderBy('title', 'asc')->get();
         return view('community/index', compact('links', 'channels'));
     }
 
@@ -59,12 +60,18 @@ class CommunityLinkController extends Controller
             'channel_id' => 'required|exists:channels,id'
         ]);
 
-        request()->merge(['user_id' => Auth::id()]);
+        $user = new User;
+        request()->merge(['user_id' => Auth::id(), 'approved' => $user->isTrusted()]);
         CommunityLink::create($request->all());
 
         // return response('Respuesta', 200);
         // return response('Error', 404);
-        return back();
+
+        if ($user->isTrusted()) {
+            return back()->with('success', 'Link creado y añadido con exito');
+        } else {
+            return back()->with('info', 'Su nuevo link se añadira cuando sea aprobado :)');
+        }
     }
 
     /**
