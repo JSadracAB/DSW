@@ -10,10 +10,10 @@ class CommunityLink extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 
-        'channel_id', 
-        'title', 
-        'link', 
+        'user_id',
+        'channel_id',
+        'title',
+        'link',
         'approved'
     ];
 
@@ -27,4 +27,13 @@ class CommunityLink extends Model
         return $this->belongsTo(Channel::class, 'channel_id');
     }
 
+    protected static function hasAlreadyBeenSubmitted($link)
+    {
+        if ($existing = static::where('link', $link)->first()) {
+            $existing->touch();
+            $existing->save();
+            return true;
+        }
+        return false;
+    }
 }

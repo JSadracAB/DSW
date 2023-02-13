@@ -17,7 +17,7 @@ class CommunityLinkController extends Controller
      */
     public function index()
     {
-        $links = CommunityLink::where('approved', 1)->paginate(25);
+        $links = CommunityLink::where('approved', true)->latest('updated_at')->paginate(25);
         $channels = Channel::orderBy('title', 'asc')->get();
         return view('community/index', compact('links', 'channels'));
     }
@@ -56,22 +56,36 @@ class CommunityLinkController extends Controller
 
         $this->validate($request, [
             'title' => 'required',
-            'link' => 'required|active_url|unique:community_links',
+            'link' => 'required|active_url',
             'channel_id' => 'required|exists:channels,id'
         ]);
 
         $user = new User;
-        request()->merge(['user_id' => Auth::id(), 'approved' => $user->isTrusted()]);
-        CommunityLink::create($request->all());
+        $trusted_user = $user->isTrusted();
+        $existing_link = CommunityLink::hasAlreadyBeenSubmitted($request['link']);
+
+        if ($trusted_user) {
+            if (!$existing_link) {
+                request()->merge(['user_id' => Auth::id(), 'approved' => $trusted_user]);
+                CommunityLink::create($request->all());
+                return back()->with('success', 'Link creado y añadido con exito');
+            } else {
+                return back()->with('info', 'Su link se ha actualizado');
+            }
+        } else {
+            if(!$existing_link) {
+                request()->merge(['user_id' => Auth::id(), 'approved' => $trusted_user]);
+                CommunityLink::create($request->all());
+                return back()->with('info', 'Su nuevo link se añadira cuando sea aprobado :)');
+            } else {
+                return back()->with('info', 'Su nuevo link se añadira cuando sea aprobado :)');
+            }
+            
+        }
 
         // return response('Respuesta', 200);
         // return response('Error', 404);
 
-        if ($user->isTrusted()) {
-            return back()->with('success', 'Link creado y añadido con exito');
-        } else {
-            return back()->with('info', 'Su nuevo link se añadira cuando sea aprobado :)');
-        }
     }
 
     /**
