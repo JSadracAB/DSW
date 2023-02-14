@@ -6,6 +6,7 @@ use App\Models\CommunityLink;
 use App\Models\Channel;
 use App\Models\User;
 use Illuminate\Http\Request;
+use \App\Http\Requests\CommynityLinkForm;
 use Illuminate\Support\Facades\Auth;
 
 class CommunityLinkController extends Controller
@@ -38,7 +39,7 @@ class CommunityLinkController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CommynityLinkForm $request)
     {
         //dd($request);
 
@@ -54,34 +55,29 @@ class CommunityLinkController extends Controller
         // $request->fullUrl();
         // Muestra la url completa (variables incluidas)
 
-        $this->validate($request, [
-            'title' => 'required',
-            'link' => 'required|active_url',
-            'channel_id' => 'required|exists:channels,id'
-        ]);
-
         $user = new User;
         $trusted_user = $user->isTrusted();
         $existing_link = CommunityLink::hasAlreadyBeenSubmitted($request['link']);
 
-        if ($trusted_user) {
-            if (!$existing_link) {
-                request()->merge(['user_id' => Auth::id(), 'approved' => $trusted_user]);
-                CommunityLink::create($request->all());
+        // Si no existe el link
+        if (!$existing_link) {
+
+            // Lo crea
+            $request->merge(['user_id' => Auth::id(), 'approved' => $trusted_user]);
+            CommunityLink::create($request->all());
+
+            // Si es una usario verificado
+            if ($trusted_user) {
                 return back()->with('success', 'Link creado y añadido con exito');
             } else {
-                return back()->with('info', 'Su link se ha actualizado');
+                return back()->with('info', 'Link creado (falta aprobacion)');
             }
+
+            // Si ya existe, actualiza el link
         } else {
-            if(!$existing_link) {
-                request()->merge(['user_id' => Auth::id(), 'approved' => $trusted_user]);
-                CommunityLink::create($request->all());
-                return back()->with('info', 'Su nuevo link se añadira cuando sea aprobado :)');
-            } else {
-                return back()->with('info', 'Su nuevo link se añadira cuando sea aprobado :)');
-            }
-            
+            return back()->with('info', 'El link se ha actualizado');
         }
+
 
         // return response('Respuesta', 200);
         // return response('Error', 404);

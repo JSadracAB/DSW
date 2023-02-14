@@ -29,7 +29,13 @@ class CommunityLink extends Model
 
     protected static function hasAlreadyBeenSubmitted($link)
     {
-        if ($existing = static::where('link', $link)->first()) {
+
+        // Como opcion adicional, incluir que solo se actualize el link 
+        // si el usuario en cuestion esta aprobado
+
+        // Si el link existe
+        if ($existing = static::where('link', $link)->first() /* && $user->isTrusted() */) {
+            // Se actualiza el campo 'update_at'
             $existing->touch();
             $existing->save();
             return true;
