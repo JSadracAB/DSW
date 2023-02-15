@@ -28,6 +28,8 @@ Route::get('community', [CommunityLinkController::class, 'index'])->middleware('
 
 Route::post('community', [CommunityLinkController::class, 'store'])->middleware('auth'); 
 
+Route::get('community/{channel}', [CommunityLinkController::class, 'index']);
+
 /*
 |--------------------------------------------------------------------------
 | ACTIVIDAD A33 - EJERCICIO 1

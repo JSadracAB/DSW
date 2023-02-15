@@ -27,7 +27,7 @@ class CommunityLink extends Model
         return $this->belongsTo(Channel::class, 'channel_id');
     }
 
-    protected static function hasAlreadyBeenSubmitted($link)
+    public function hasAlreadyBeenSubmitted($link)
     {
 
         // Como opcion adicional, incluir que solo se actualize el link 

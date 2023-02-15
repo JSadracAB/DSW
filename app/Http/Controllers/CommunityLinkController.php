@@ -16,9 +16,15 @@ class CommunityLinkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Channel $channel = null)
     {
-        $links = CommunityLink::where('approved', true)->latest('updated_at')->paginate(25);
+        // dd($channel);
+        if($channel){
+            $links = $channel->communityLinks()->where('approved', true)->latest('updated_at')->paginate(25);
+        } else {
+            $links = CommunityLink::where('approved', true)->latest('updated_at')->paginate(25);
+        }
+        
         $channels = Channel::orderBy('title', 'asc')->get();
         return view('community/index', compact('links', 'channels'));
     }
@@ -57,7 +63,11 @@ class CommunityLinkController extends Controller
 
         $user = new User;
         $trusted_user = $user->isTrusted();
-        $existing_link = CommunityLink::hasAlreadyBeenSubmitted($request['link']);
+
+        $link = new CommunityLink();
+        $link->user_id = Auth::id();
+
+        $existing_link = $link->hasAlreadyBeenSubmitted($request->link);
 
         // Si no existe el link
         if (!$existing_link) {
