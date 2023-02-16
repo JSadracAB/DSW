@@ -1,5 +1,11 @@
 <div class="col-md-8">
-    <h1 class="title"><a href='http://example-app.test/community'>Community</a></h1>
+    <h1 class="title"><a class="text-info" href="/community">Community</a>
+
+        @if (isset($channel))
+        - {{ strtoupper($channel->title) }}
+        @endif
+
+    </h1>
 
     {{-- Lista de links --}}
 
@@ -15,7 +21,7 @@
                         {{$link->title}}
                     </a>
                 </p>
-                <a href="/community/{{ $link->channel->slug }}">{{$link->channel->slug}}</a>
+                <a href="/community/{{ $link->channel->slug }}" style="color: {{ $link->channel->color }}">{{$link->channel->slug}}</a>
                 <small>Contributed by: <b class="creator">{{$link->creator->name}}</b> {{$link->updated_at->diffForHumans()}}</small>
             </div>
             <div class="channel col-3">

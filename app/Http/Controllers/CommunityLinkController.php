@@ -19,14 +19,18 @@ class CommunityLinkController extends Controller
     public function index(Channel $channel = null)
     {
         // dd($channel);
+
+        // Si se pasa un canal por parametro
         if($channel){
+            // Filtra por canal y muestra el resultado
             $links = $channel->communityLinks()->where('approved', true)->latest('updated_at')->paginate(25);
         } else {
+            // Si no, se muestran todos los canales
             $links = CommunityLink::where('approved', true)->latest('updated_at')->paginate(25);
         }
-        
+    
         $channels = Channel::orderBy('title', 'asc')->get();
-        return view('community/index', compact('links', 'channels'));
+        return view('community/index', compact('links', 'channel', 'channels'));
     }
 
     /**

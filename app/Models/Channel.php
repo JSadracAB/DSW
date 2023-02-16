@@ -21,6 +21,6 @@ class Channel extends Model
     }
 
     public function communityLinks(){
-        return $this->hasMany(CommunityLink::class);
+        return $this->hasMany(CommunityLink::class, 'channel_id');
     }
 }
