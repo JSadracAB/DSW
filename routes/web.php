@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CommunityLinkController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,9 +25,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('community', [CommunityLinkController::class, 'index'])->middleware('auth');  
+Route::get('community', [CommunityLinkController::class, 'index'])->middleware('auth');
 
-Route::post('community', [CommunityLinkController::class, 'store'])->middleware('auth'); 
+Route::post('community', [CommunityLinkController::class, 'store'])->middleware('auth');
 
 Route::get('community/{channel}', [CommunityLinkController::class, 'index']);
 
@@ -47,17 +48,20 @@ Route::post('/test/{name}', function ($name) {
 });
 
 // Uso Request para identificar el tipo de solicitud
-Route::match(['get', 'post'], '/test-match/{name?}', 
-function (Request $request, $name = 'desconocido') {
+Route::match(
+    ['get', 'post'],
+    '/test-match/{name?}',
+    function (Request $request, $name = 'desconocido') {
 
-    if ($request->isMethod('get')) {
-        return "Bienvenido $name" . "<br>" .
-            "Metodo de entrada: GET";
-    } else {
-        return "Bienvenido $name" . "<br>" .
-            "Metodo de entrada: POST";
+        if ($request->isMethod('get')) {
+            return "Bienvenido $name" . "<br>" .
+                "Metodo de entrada: GET";
+        } else {
+            return "Bienvenido $name" . "<br>" .
+                "Metodo de entrada: POST";
+        }
     }
-});
+);
 
 // Si el valor no es numérico, devuelve un error 404
 Route::get('/numbers/{value?}', function ($value = null) {
@@ -134,6 +138,95 @@ Route::get('/fecha ', function () {
 
 // ERRORES
 Route::view('/error', 'A33/prueba');
+
+/*
+|--------------------------------------------------------------------------
+| ACTIVIDAD A39 - EJERCICIO 4
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/consultas ', function () {
+
+    echo '<h1>Tarea A39 - Ejercicio 4</h1>';
+
+    /* 
+    -- Todos los usuarios que tengan en el nombre la cadena "Fer".
+    $query = DB::table('users')
+        ->where('name', 'like', '%Fer%')
+        ->get();
+
+
+    -- Todos los usuarios que tengan en el correo la palabra "laravel" y la cadena "com".
+    $query = DB::table('users')
+        ->where([
+            ['email', 'like', '%laravel%'],
+            ['email', 'like', '%com%']
+        ])
+        ->get();
+
+
+    -- Todos los usuarios que tengan en el correo la palabra "laravel" o la palabra "com".
+    $query = DB::table('users')
+        ->where('email', 'like', '%laravel%')
+        ->orWhere('email', 'like', '%com%')
+        ->get();
+
+
+    -- Haz un insert en la tabla usuarios.
+    DB::table('users')->insert([
+        'name' => fake()->name(),
+        'email' => fake()->unique()->safeEmail(),
+        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+    ]);
+
+
+    -- Haz un insert de dos usuarios al mismo tiempo en la tabla usuarios.
+    DB::table('users')->insert([
+        [
+            'name' => 'usuarioA',
+            'email' => fake()->unique()->safeEmail(),
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'
+        ],
+        [
+            'name' => 'usuarioB',
+            'email' => fake()->unique()->safeEmail(),
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'
+        ] 
+    ]);
+
+
+    -- Haz un insert utilizando el método insertGetId.
+    $id = DB::table('users')->insertGetId(
+        [
+            'name' => 'usuarioC',
+            'email' => fake()->unique()->safeEmail(),
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'
+        ]
+    );
+    echo 'Usuario insertado, Id: ' . $id;
+
+
+    -- Actualiza el correo del usuario con id=2.
+    $affected = DB::table('users')
+        ->where('id', 2)
+        ->update(['email' => 'email_actualizado@gmail.com']);
+    echo 'Registros cambiados: ' . $affected;
+
+
+    -- Borra el usuario con id 3.
+    $deleted = DB::table('users')->where('id', 3)->delete();
+    echo 'Usuarios borrados: ' . $deleted;
+
+    -- Mostrar resultados en navegador
+    if (count($query) > 0) {
+        foreach ($query as $user) {
+            echo $user->name . '<br>';
+        }
+    } else {
+        echo 'No hay resultados';
+    }
+*/
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

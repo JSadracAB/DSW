@@ -48,4 +48,9 @@ class User extends Authenticatable implements MustVerifyEmail
         $approved = Auth::user()->trusted ? true : false;
         return $approved;
     }
+
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
 }
