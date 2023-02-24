@@ -6,7 +6,7 @@ use App\Models\CommunityLink;
 use App\Models\Channel;
 use App\Models\User;
 use Illuminate\Http\Request;
-use \App\Http\Requests\CommynityLinkForm;
+use App\Http\Requests\CommunityLinkForm;
 use Illuminate\Support\Facades\Auth;
 
 class CommunityLinkController extends Controller
@@ -49,7 +49,7 @@ class CommunityLinkController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CommynityLinkForm $request)
+    public function store(CommunityLinkForm $request)
     {
         //dd($request);
 
