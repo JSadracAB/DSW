@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CommunityLinkController;
+use App\Http\Controllers\CommunityLinkUserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -30,6 +31,8 @@ Route::get('community', [CommunityLinkController::class, 'index'])->middleware('
 Route::post('community', [CommunityLinkController::class, 'store'])->middleware('auth');
 
 Route::get('community/{channel}', [CommunityLinkController::class, 'index']);
+
+Route::post('votes/{link}', [CommunityLinkUserController::class, 'store']);
 
 /*
 |--------------------------------------------------------------------------

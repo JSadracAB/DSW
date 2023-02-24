@@ -16,9 +16,16 @@
         @foreach ($links as $link)
         <li class="row">
 
-            <div class="likes px-3 col-1">
-                <img src="{{asset('images/like.png')}}" alt="Likes">
-                <p class="ml-1">{{$link->users()->count()}}</p>
+            <div class="likes col-1">
+                <form method="POST" action="/votes/{{ $link->id }}">
+                    {{ csrf_field() }}
+                    <button type="submit" class="btn {{ Auth::check() && Auth::user()->votedFor($link) ? 'btn-outline-success' : 'btn-outline-secondary' }}" {{ Auth::guest() ? 'disabled' : '' }}>
+                        <div class="likes">
+                            <img src="{{asset('images/like.png')}}" alt="Likes">
+                            <p class="ml-1">{{$link->users()->count()}}</p>
+                        </div>
+                    </button>
+                </form>
             </div>
 
             <div class="links col-9">
@@ -32,11 +39,13 @@
                     <small>Contributed by: <b class="creator">{{$link->creator->name}}</b> {{$link->updated_at->diffForHumans()}}</small>
                 </div>
             </div>
+
             <div class="channels col-2">
                 <span class="label label-default" style="background: {{ $link->channel->color }}">
                     {{ strtoupper($link->channel->title) }}
                 </span>
             </div>
+
         </li>
         @endforeach
     </ul>
