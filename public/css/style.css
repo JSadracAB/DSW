@@ -11,7 +11,29 @@ li {
     border: 1px solid rgb(212, 203, 180);
 }
 
-.link>p {
+.likes{
+    background: rgb(212, 203, 180);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.likes>img{
+    width: 20px;
+}
+
+.likes>p{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.links{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+.links>div>p {
     font-size: 20px;
     font-weight: bold;
 }
@@ -20,13 +42,13 @@ li {
     color: orange;
 }
 
-.channel {
+.channels {
     display: flex;
     align-items: center;
     justify-content: end;
 }
 
-.channel>span {
+.channels>span {
     border-radius: 5px;
     font-weight: bold;
     color: white;
