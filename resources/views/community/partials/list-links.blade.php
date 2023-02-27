@@ -2,7 +2,7 @@
     <h1 class="title"><a class="text-info" href="/community">Community</a>
 
         @if (isset($channel))
-        - {{ strtoupper($channel->title) }} 
+        - {{ strtoupper($channel->title) }}
         @endif
 
     </h1>
@@ -27,19 +27,19 @@
         @foreach ($links as $link)
         <li class="row">
 
-            <div class="likes col-1">
+            <div class="likes col-2 col-sm-2 col-md-2 col-lg-auto col-auto">
                 <form method="POST" action="/votes/{{ $link->id }}">
                     {{ csrf_field() }}
                     <button class="btn {{ Auth::check() && Auth::user()->votedFor($link) ? 'btn-outline-success' : 'btn-outline-secondary' }}" {{ Auth::guest() ? 'disabled' : '' }}>
                         <div class="likes">
-                            <img src="{{asset('images/like.png')}}" alt="Likes">
-                            <p class="ml-1">{{$link->users()->count()}}</p>
+                            <i class="fa-regular fa-thumbs-up fa-lg" title="Like"></i>
+                            <p>{{$link->users()->count()}}</p>
                         </div>
                     </button>
                 </form>
             </div>
 
-            <div class="links col-9">
+            <div class="links col col-sm col-md col-lg">
                 <div>
                     <p>
                         <a href="{{$link->link}}" target="_blank">
@@ -51,7 +51,7 @@
                 </div>
             </div>
 
-            <div class="channels col-2">
+            <div class="channels col-2 col-sm-2 col-md-2 col-lg-auto">
                 <span class="label label-default" style="background: {{ $link->channel->color }}">
                     {{ strtoupper($link->channel->title) }}
                 </span>

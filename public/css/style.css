@@ -17,8 +17,10 @@ li {
     justify-content: center;
 }
 
-.likes>img{
-    width: 20px;
+.guest{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .likes>p{
