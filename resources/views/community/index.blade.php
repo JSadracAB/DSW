@@ -12,7 +12,7 @@
         @include('community.partials.add-link')
         
     </div>
-    {{$links->links()}}
+    {{ $links->appends($_GET)->links() }}
 
 </div>
 

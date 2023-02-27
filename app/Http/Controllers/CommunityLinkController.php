@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CommunityLink;
 use App\Models\Channel;
 use App\Models\User;
+use App\Queries\CommunityLinksQuery;
 use Illuminate\Http\Request;
 use App\Http\Requests\CommunityLinkForm;
 use Illuminate\Support\Facades\Auth;
@@ -20,15 +21,34 @@ class CommunityLinkController extends Controller
     {
         // dd($channel);
 
-        // Si se pasa un canal por parametro
-        if($channel){
-            // Filtra por canal y muestra el resultado
-            $links = $channel->communityLinks()->where('approved', true)->latest('updated_at')->paginate(25);
-        } else {
-            // Si no, se muestran todos los canales
-            $links = CommunityLink::where('approved', true)->latest('updated_at')->paginate(25);
+        $query = new CommunityLinksQuery;
+        $popular_tag = request()->exists('popular');
+
+        // Si existe la etiqueta 'popular'
+        if ($popular_tag) {
+
+            // Y se pasa un canal por parametro
+            if ($channel) {
+                // Filtra los links mas votados de ese canal
+                $links =  $query->getMostPopularByChannel($channel);
+            } else {
+                // Si no, filtra todos los links mas votados
+                $links =  $query->getMostPopular();
+            }
+        } 
+        // Si no existe la etiqueta 'popular'
+        else
+        {
+            // Y se pasa un canal por parametro
+            if ($channel) {
+                // Muestra todos los links de dicho canal sin filtrar
+                $links = $query->getByChannel($channel);
+            } else {
+                // Si no, muestra todos los links existentes
+                $links =  $query->getAll();
+            }
         }
-    
+
         $channels = Channel::orderBy('title', 'asc')->get();
         return view('community/index', compact('links', 'channel', 'channels'));
     }
@@ -91,7 +111,6 @@ class CommunityLinkController extends Controller
         } else {
             return back()->with('info', 'El link se ha actualizado');
         }
-
 
         // return response('Respuesta', 200);
         // return response('Error', 404);

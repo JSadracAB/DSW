@@ -26,8 +26,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('community', [CommunityLinkController::class, 'index'])->middleware('auth');
+Route::get('community', [CommunityLinkController::class, 'index']);
 
+// Solo los usuarios autenticados pueden crear un post
 Route::post('community', [CommunityLinkController::class, 'store'])->middleware('auth');
 
 Route::get('community/{channel}', [CommunityLinkController::class, 'index']);
